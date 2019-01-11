@@ -22,12 +22,40 @@ import xml.etree.ElementTree as ET
 import argparse
 from utils.testProcess import ResultManager, testProcess
 
-parser = argparse.ArgumentParser(description="\n\n************** MPAS Regression Testing Framework **************\n\nThis testing framework runs selected tests from a suite. A folder called \nregtest.$TIMESTAMP$ will be made in this directory with test files/results.", epilog='For more information, visit the repository on Github and read the README.\nhttps://github.com/daniel-j-henderson/MPAS-Testing-Framework\n\n***************************************************************', formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument('names', nargs='+',	help="The test/group names; that is, the names of every test \nor test group (see Tests.xml) you'd like to run. Required")
-parser.add_argument('-n', type=int, metavar='NPROCS', help="The maximum number of processors to be used at any \ngiven time during testing")
-parser.add_argument('-env', metavar="Environmnent", 	help="Explicit name/path of the XML file that defines the testing \nenvironmnt, like an Environment.xml, yellowstone.xml, etc. \nDefault: 'Environment.xml'")
-parser.add_argument('-src', metavar="MPAS_SRC_DIR", 	help="The relative path to the directory containing the MPAS code \nto be tested. This is the directory that will be \ncompiled/executables will be gathered from. If not specified, \nthe test_driver.py must be launched from within the source \ncode directory. \nDefault: present working directory")
+parser = argparse.ArgumentParser(description="\n\n************** MPAS Regression Testing Framework **************\n\n" \
+                                             "This testing framework runs selected tests from a suite. A folder called\n"   \
+                                             "regtest.$TIMESTAMP$ will be made in this directory with test files/results.", 
+                                      epilog="For more information, visit the repository on Github and read the README.\n"  \
+                                              "https://github.com/daniel-j-henderson/MPAS-Testing-Framework\n\n"            \
+                                              "***************************************************************", 
+                                      formatter_class=argparse.RawTextHelpFormatter)
+
+parser.add_argument('names', nargs='+',	
+                    help="The test/group names; that is, the names of every test \n" \
+                    "or test group (see Tests.xml) you'd like to run. Required")
+
+parser.add_argument('-n', 
+                    type=int, 
+                    metavar='NPROCS', 
+                    help="The maximum number of processors to be used at any\n" \
+                         "given time during testing")
+
+parser.add_argument('-env', 
+                    metavar="Environmnent", 
+                    help="Explicit name/path of the XML file that defines the testing\n" \
+                         "environmnt, like an Environment.xml, yellowstone.xml, etc. \n" \
+                         "Default: 'Environment.xml'")
+
+parser.add_argument('-src', 
+                    metavar="MPAS_SRC_DIR",
+                    help="The relative path to the directory containing the MPAS code\n"   \
+                         "to be tested. This is the directory that will be\n"              \
+                         "compiled/executables will be gathered from. If not specified,\n" \
+                         "the test_driver.py must be launched from within the source\n"    \
+                         "code directory.\n"                                               \
+                         "Default: present working directory")
+
 args = vars(parser.parse_args())
 
 utils = ilib.import_module('utils.utils')
@@ -40,8 +68,11 @@ utils = ilib.import_module('utils.utils')
 #
 #
 
+# TODO: This line too
 if not spawn.find_executable('pdflatex'):
-	print("The executable 'pdflatex' could not be found, so a pdf report of test results cannot be made. If you would like to see a basic results printout on the screen, or generate the '.tex.' file for reference/future use, continue. Would you like to continue?")
+	print("The executable 'pdflatex' could not be found, so a pdf report of test results cannot be made. " \
+          "If you would like to see a basic results printout on the screen, or generate the '.tex.' file "\
+          "for reference/future use, continue. Would you like to continue?")
 	choice = raw_input('y/n: ')
 	if choice in ['n', 'N', 'no', 'NO']:
 		os._exit(4)
