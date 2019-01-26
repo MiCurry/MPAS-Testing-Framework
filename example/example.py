@@ -13,9 +13,10 @@ def setup(tparams):
 	#want from the Standard Library, and they will be put in your test_dir.
 
 	#setup() is run in your test sandbox directory, so you can make any changes
-	#to it that you need. Note: setup is not necessarily run directly before 
-	#test(), so it is unwise to make any changes that might be reverted by some
-	#other test before the test() function is called
+	#to it that you need. 
+	# TODO: Note: setup is not necessarily run directly before 
+	# test(), so it is unwise to make any changes that might be reverted by some
+	# other test before the test() function is called
 
 	files = ['x1.2562.grid.nc', 'x1.2562.graph.info.part.4'] #list of desired files from the SL
 	# optional :: locations  = [a, b ...] list of locations (absolute filepaths) to put each file in 'files'

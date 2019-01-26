@@ -1,12 +1,12 @@
 import os, sys, time
 
-nprocs=12
-compatible_environments = ['kuusi','cheyenne']
-dependencies=['compile_gnu']
+nprocs=2
+compatible_environments = ['kuusi','cheyenne', 'snorri']
+dependencies = ['compile_intel']
 
 def setup(tparams):
 
-	files = ['supercell_grid.nc', 'supercell.graph.info.part.12']
+	files = ['supercell_grid.nc', 'supercell.graph.info.part.2']
 	return {'files':files, 'modset':'gnu'}
 
 def test(tparams, res):
@@ -48,9 +48,25 @@ def test(tparams, res):
 	os.system('ln -s '+exe_dir+'/atmosphere_model .')
 
 	utils.linkAllFiles(template_dir+'/inputs', './')
-	init = utils.modelRun('./', 'init_atmosphere_model', 1, env, add_lsfoptions={'-W':'0:30', '-e':'run.err', '-o':'run.out'}, add_pbsoptions={'-l walltime=00:30:00':''})
+
+	init = utils.modelRun('./', 
+						 'init_atmosphere_model', 
+						 1, 
+						 env, 
+						 add_lsfoptions={'-W':'0:30', 
+						 				 '-e':'run.err', 
+										 '-o':'run.out'}, 
+						add_pbsoptions={'-l walltime=00:30:00':''})
 	init.runModelBlocking()
-	supercell = utils.modelRun('./', 'atmosphere_model', 12, env, add_lsfoptions={'-W':'0:30', '-e':'run.err', '-o':'run.out'}, add_pbsoptions={'-l walltime=00:30:00':''})
+
+	supercell = utils.modelRun('./', 
+							   'atmosphere_model', 
+							   2, 
+							   env, 
+							   add_lsfoptions={'-W':'0:30', 
+							   				   '-e':'run.err', 
+											   '-o':'run.out'}, 
+							   add_pbsoptions={'-l walltime=00:30:00':''})
 	supercell.runModelBlocking()
 
 	e_init = init.get_result()
@@ -60,7 +76,6 @@ def test(tparams, res):
 
 	res.set('err_code', err_code)
 	if err_code == 0:
-#		os.system('ln -s /sysdisk1/duda/regtesting/mgduda/tests/regtest.2017-05-10_17.53.36/ideal_supercell/output.nc .')
 		os.system('ncl supercell.ncl')
 		os.system('mkdir figures')
 		os.system('mv supercell.pdf figures')

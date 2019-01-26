@@ -21,11 +21,12 @@ What's Included (for test writers):
 class Result:
 	"""
 	Result Class
-	Used to store the results of a test or method. At present, is effectively like a wrapper around a dictionary. 
-	Same syntax as Environment Class
+	Used to store the results of a test or method. At present, is effectively
+	like a wrapper around a dictionary. Same syntax as Environment Class
 
-	Note: the result for the test() method must set the 'completed' key, and should in most cases also set the 
-			'success', 'err', 'err_msg', and 'err_code' keys
+	Note: the result for the test() method must set the 'completed' key, and
+	should in most cases also set the 'success', 'err', 'err_msg', and
+	'err_code' keys
 	"""
 	
 	def __init__(self):
@@ -52,8 +53,8 @@ class Result:
 class Environment:
 	"""
 	Environment class
-	Used to store parameters/objects specific to the computing environment the tests are running on, like
-	Yellowstone, Cheyenne, or a local mmm machine.
+	Used to store parameters/objects specific to the computing environment the
+	tests are running on, like Yellowstone, Cheyenne, or a local mmm machine.
 	
 	get
 		pname
@@ -61,7 +62,8 @@ class Environment:
 			content: key, name of parameter
 		return 
 			type: any
-			content: could be a module, integer, string etc. specific to the computing environment
+			content: could be a module, integer, string etc. specific to the
+					 computing environment
 	"""
 
 	NONE = 0 # No supercomputing environment. MMM local machine
@@ -83,9 +85,12 @@ class Environment:
 		return
 
 	def add_modset(self, name, root):
+		# TODO: Modset is a group of loaded modules ... see cocobolo.xml for
+		# example modsets
 		self.modsets[name] = root
 
 	def module(self, *args):
+		# lmod command wrapper - runs lmod commands - NEAT!
 		if not self.get('LMOD_CMD'):
 			print('Module command not found.')
 			return False
@@ -108,10 +113,10 @@ class Environment:
 			print('purge failed')
 
 		# Start by resetting to the base modules. All modsets are built off of the base modset.
-		if name is not 'base':
-			e = self.mod_reset('base')
-			if e:
-				return e
+	#	if name is not 'base':
+	#		e = self.mod_reset('base')
+	#		if e:
+	#			return e
 		for mod in modset:
 			if mod.tag == 'module':
 				modname = mod.get('name')
@@ -131,11 +136,11 @@ class Environment:
 			elif mod.tag == 'env_var':
 				os.environ[mod.get('name')] = mod.get('value')
 
-class ResultManager(mm.BaseManager):
+class ResultManager(mm.BaseManager): # TODO: I am also confused by this 
   	# Private to the utils module, test writer need not use 
    pass
 
-ResultManager.register('Result', Result)
+ResultManager.register('Result', Result) # TODO: I am confused by this 
 
 
 
@@ -179,11 +184,15 @@ class modelProcess(multiprocessing.Process):
 
 class modelRun:
 
-	"""
+	# TODO: Each docstring should be associated with its function, not at the
+	# top of the class
+	""" 
 	Class modelRun
-	Used to handle running the MPAS model in a test. When using, first initialize the object with all the parameters
-	necessary (described below), then either choose to use either runModelNonblocking() or runModelBlocking().
-	If runModelNonblocking() is used, then terminate() must be called after the model run has finished.
+	Used to handle running the MPAS model in a test. When using, first
+	initialize the object with all the parameters necessary (described below),
+	then either choose to use either runModelNonblocking() or
+	runModelBlocking().  If runModelNonblocking() is used, then terminate()
+	must be called after the model run has finished.
 
 	__init__
 		dir
@@ -191,7 +200,8 @@ class modelRun:
 			content: absolute path to directory in which the model will run.
 		exename
 			type: string
-			content: name of executable, e.g. atmosphere_model, init_atmosphere_model, toy
+			content: name of executable, e.g. atmosphere_model,
+					init_atmosphere_model, toy
 		n	
 			type: integer
 			content: number of MPI tasks to use
@@ -199,34 +209,40 @@ class modelRun:
 			type: Environment object
 		add_lsfoptions
 			type: dictionary
-			content: additional options for LSF systems, e.g. '-W':'0:05' for a wall clock time of 5 minutes, '-e':'run.err' to write standard error to run.err file
+			content: additional options for LSF systems, e.g. '-W':'0:05' for a
+					wall clock time of 5 minutes, '-e':'run.err' to write
+					standard error to run.err file
 		add_pbsoptions
 			type: dictionary
 			content: additional options for PBS systems
 
-		Note: the test writer should provide all of these parameters, although PBS systems are not yet supported
+		Note: the test writer should provide all of these parameters, although
+		PBS systems are not yet supported
   
 
 	runModelNonblocking
-		Runs model in non-blocking mode. This method returns immediately and the model runs in the background.
-		Use the has_started() and is_finished() methods to determine when the model has finished running. The
-		terminate() method must be called at some point after the model run finishes (or, if the model run is 
-		still going, it terminates it early).
+		Runs model in non-blocking mode. This method returns immediately and
+		the model runs in the background.  Use the has_started() and
+		is_finished() methods to determine when the model has finished running.
+		The terminate() method must be called at some point after the model run
+		finishes (or, if the model run is still going, it terminates it early).
 
 		return
 			type: logical
 			content: method finished successfully
 
 	runModelBlocking
-		Runs model in blocking mode. This method blocks while the model is running, returning only after the run has finished. 
-		There is no need to use the terminate() method after runModelBlocking.
+		Runs model in blocking mode. This method blocks while the model is
+		running, returning only after the run has finished.  There is no need
+		to use the terminate() method after runModelBlocking.
 		
 		return
 			type: logical
 			content: method finished successfully
 	
 	dummyModelRun
-		Returns a result object without running the model. Used as a prototype/simulated model run for examples/development purposes.
+		Returns a result object without running the model. Used as a
+		prototype/simulated model run for examples/development purposes.
 	
 		type
 			type: string
@@ -238,8 +254,10 @@ class modelRun:
 	has_started
 		return
 			type: logical
-			content: model run has started (meaning the model run process has been started, not necessarily that the job is 
-						running on the cluster, i.e. job may still be pending in the LSF queue)
+			content: model run has started (meaning the model run process has
+					been started, not necessarily that the job is running on
+					the cluster, i.e. job may still be pending in the LSF
+					queue)
 
 	is_finished
 		return
@@ -249,7 +267,8 @@ class modelRun:
 	get_result
 		return
 			type: Result object
-			content: result of the model run. Keys 'completed':logical, 'err_code':return code from the executable.
+			content: result of the model run. Keys 'completed':logical,
+			'err_code':return code from the executable.
 	"""
 
 	def __init__(self, dir, exename, n, env, add_lsfoptions={}, add_pbsoptions={}): 
@@ -268,8 +287,18 @@ class modelRun:
 		self.result_manager = ResultManager()
 		self.result_manager.start()
 		self.result = self.result_manager.Result() 
-		self.t = modelProcess(pre=setupModelRun, post=returnFromModelRun, main=__runModelNonblocking__, nprocs = self.n_tasks, 
-									args={'dir':self.run_dir, 'exename':self.exename, 'n':self.n_tasks, 'env':self.env, 'dest':self.run_dir, 'add_lsfoptions':self.add_lsfoptions, 'add_pbsoptions':self.add_pbsoptions}, result = self.result)
+		self.t = modelProcess(pre=setupModelRun, 
+							  post=returnFromModelRun, 
+							  main=__runModelNonblocking__, 
+							  nprocs = self.n_tasks, 
+						 	  args= {'dir':self.run_dir, 
+							  	  	 'exename':self.exename, 
+								   	 'n':self.n_tasks, 
+								  	 'env':self.env, 
+								  	 'dest':self.run_dir, 
+								  	 'add_lsfoptions':self.add_lsfoptions, 
+								  	 'add_pbsoptions':self.add_pbsoptions}, 
+							  result = self.result)
 		self.started = True
 		self.t.start()
 		return True 
@@ -277,7 +306,12 @@ class modelRun:
 	def runModelBlocking(self):
 		self.started = True
 		popdir = setupModelRun(self.run_dir)
-		r = runModel(self.run_dir, self.exename, self.n_tasks, self.env, add_lsfoptions=self.add_lsfoptions, add_pbsoptions=self.add_pbsoptions)
+		r = runModel(self.run_dir, 
+					 self.exename, 
+					 self.n_tasks, 
+					 self.env, 
+					 add_lsfoptions=self.add_lsfoptions, 
+					 add_pbsoptions=self.add_pbsoptions)
 		self.result = Result()
 		self.result.set('completed', r[0])
 		self.result.set('err_code', r[1])
@@ -327,7 +361,9 @@ class modelRun:
 			self.result_manager = None
 
 
-
+# TODO: Is the following statement uptodate and correct? There are more
+# Then 4 functions below it. Which ones are private? And which ones are 
+# public?
 #		
 # The following 4 methods should be considered private and not used by the test writer
 #
@@ -345,10 +381,14 @@ def returnFromModelRun(dir):
 	os.chdir(dir)
 
 def __runModelNonblocking__(args):
-	return runModel(args['dir'], args['exename'], args['n'], args['env'], args['add_lsfoptions'], args['add_pbsoptions'])
+	return runModel(args['dir'], 
+					args['exename'], 
+					args['n'], 
+					args['env'], 
+					args['add_lsfoptions'], 
+					args['add_pbsoptions'])
 
 def runModel(dir, exename, n, env, add_lsfoptions={}, add_pbsoptions={}):
-
 	if env.get('name') == 'yellowstone' or env.get('type') == Environment.ENVLSF:
 		args = []
 		lsf_options = env.get('lsf_options')
@@ -388,21 +428,16 @@ def runModel(dir, exename, n, env, add_lsfoptions={}, add_pbsoptions={}):
 
 	elif env.get('name') == 'mmm' or env.get('type') == Environment.NONE:
 		cmd = 'mpirun -n '+str(n)+' ./'+exename
+		print("We are running this command not on an HPC")
 		print(cmd)
 
 	completed = False
-	print(os.getcwd())
 	err = os.system(cmd)
-	print(os.getcwd())
 	if (err):
 		print('error running '+exename+' in '+dir+', error code '+str(err))
 	else:
 		completed = True	
 	return completed, err
-#
-#
-#
-
 
 
 def compile(src_dir, core, target, clean=False):
@@ -416,27 +451,33 @@ def compile(src_dir, core, target, clean=False):
 	os.chdir(popdir)
 	return r
 
+
+
 #
 # The following 4 methods are utilities for the test writer to utilize.
 #
 
 def compareFiles(a, b, env, ignore=[]):
 	"""
-	Compares netcdf files 'a' and 'b' on the environment 'env' and returns a result containing info about any differences found.
-	a, b
+	Compares netcdf files 'a' and 'b' on the environment 'env' and returns a
+	result containing info about any differences found.  a, b
 		type: string
 		content: absolute filepath of each netcdf file to be compared
 	env
 		type: Environment object
 	ignore:
 		type: list
-		content: names (strings) of fields for which we need not compare the 2 files. Optional.
+		content: names (strings) of fields for which we need not compare the 2
+				files. Optional.
 	return
 		type: Result object
 		content:
-					'diff_fields' // type: list(string), names of each field which is not bitwise identical between files a and b
-					'num_diffs' // type: list(int), number of differences for each differing field
-					'rms_error' // type: list(float), RMS difference for each differing field
+				'diff_fields' // type: list(string), names of each field which
+								 is not bitwise identical between files a and b
+				'num_diffs' // type: list(int), number of differences for each
+							   differing field
+				'rms_error' // type: list(float), RMS difference for each
+							   differing field
 	Note: any fields not present in both files are skipped
 	"""
 
@@ -496,8 +537,8 @@ def compareFiles(a, b, env, ignore=[]):
 
 def searchForFile(tag, name, relpath):
 	"""
-	Recursively searches the xml tree 'tag' for the file 'name', appending the subdirectories traveled to the list 'relpath'
-	tag
+	Recursively searches the xml tree 'tag' for the file 'name', appending the
+	subdirectories traveled to the list 'relpath' tag
 		type: ElementTree object 
 		content: tag of the Library.xml tree
 	name
@@ -527,8 +568,8 @@ def searchForFile(tag, name, relpath):
 
 def retrieveFileFromSL(name, dest, env):
 	"""
-	Retreives file 'name' from the SL on the 'env' environment and places it in the 'dest' directory'.
-	name
+	Retreives file 'name' from the SL on the 'env' environment and places it in
+	the 'dest' directory'.  name
 		type: string
 		content: name of file
 	dest
@@ -544,15 +585,8 @@ def retrieveFileFromSL(name, dest, env):
 
 	import xml.etree.ElementTree as ET
 
-	# Sanity checks during development
-	if env.get('name') == 'yellowstone':
-		print('On yellowstone, looking for '+name)
-	elif env.get('name') == 'mmm':
-		print('On an MMM machine, looking for '+name)
-	else:
-		print('Unknown environment.')
-
-	# move to the SL if it exists
+	# move to the SL if it exists TODO: This comment should be broader
+	# TODO: Is it necessary to move to the SL?
 	popdir = os.getcwd()
 	if env.get('pathSL'):
 		os.chdir(env.get('pathSL'))
@@ -560,11 +594,12 @@ def retrieveFileFromSL(name, dest, env):
 		print('No SL in this environment')
 		return False
 
-	#TODO check for existence
+	#TODO check for existence - Existence of ???
 	root = ET.parse('Library.xml').getroot()
 	filepath = root.get('path')
 	relpath = []
 	
+	# TODO: What XML are we using to search?
 	found = searchForFile(root, name, relpath)
 	if found:
 		for subpath in reversed(relpath):
@@ -579,8 +614,8 @@ def retrieveFileFromSL(name, dest, env):
 
 def linkAllFiles(dirA, dirB):
 	"""
-	Attempts to link all files from dirA into dirB. A little more convenient to the test writer than
-	linking specific files.
+	Attempts to link all files from dirA into dirB. A little more convenient to
+	the test writer than linking specific files.
 	dirA, dirB :: absolute paths to directories A and B
 					  type: string
 	"""

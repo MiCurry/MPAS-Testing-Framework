@@ -1,7 +1,7 @@
 import os, sys, time
 
 nprocs = 1
-compatible_environments = ['kuusi','cheyenne']
+compatible_environments = ['kuusi','cheyenne', 'snorri']
 
 def setup(tparams):
 
@@ -41,23 +41,35 @@ def test(tparams, res):
 	#
 	# First compile the init_atmosphere core
 	#
-	os.system('time make gfortran CORE=init_atmosphere > make.init.log 2>&1')
-	if not os.path.isfile('init_atmosphere_model') or not os.path.getsize('init_atmosphere_model') > 1000000:
+	os.system('make clean CORE=atmosphere >& /dev/null')
+	os.system('make clean CORE=init_atmosphere PRECISION=single >& /dev/null')
+	print("Compiling init_atmosphere with gfortran...")
+	os.system('time make gfortran CORE=init_atmosphere PRECISION=single > make.init.log 2>&1')
+	if    not os.path.isfile('init_atmosphere_model') 
+	   or not os.path.getsize('init_atmosphere_model') > 1000000:
 		res.set('err_msg', 'GNU build test failed to compile init_atmosphere_model')
 		res.set('err_code', 1)
 		res.set('success', False)
 		res.set('completed', True)
 		return
 
+	print("init_atmosphere built with gfortran!\n")
+
 	#
 	# Then clean and compile the atmosphere core
 	#
-	os.system('make clean CORE=atmosphere > clean.log 2>&1')
-	os.system('time make gfortran CORE=atmosphere > make.model.log 2>&1')
+	os.system('make clean CORE=atmosphere >& /dev/null')
+	os.system('make clean CORE=init_atmosphere >& /dev/null')
+
+	print("Compiling atmosphere model with gfortran...")
+	os.system('time make gfortran CORE=atmosphere PRECISION=single')
+	print("Compiling atmosphere model again with gfortran to get past errors") 
+	os.system('time make gfortran CORE=atmosphere PRECISION=single')
 	if os.path.isfile('atmosphere_model') and os.path.getsize('atmosphere_model') > 1000000:
 		res.set('err_msg', 'GNU build test passed')
 		res.set('err_code', 0)
 		res.set('success', True)
+		print("Built atmosphere model with gfortran!\n")
 	else:
 		res.set('err_msg', 'GNU build test failed to compile atmosphere_model')
 		res.set('err_code', 1)

@@ -30,7 +30,6 @@ class testProcess(multiprocessing.Process):
 		self.result = result	
 
 	def run(self):
-		
 		import time
 		import datetime as dt
 		os.chdir(self.cwd)
