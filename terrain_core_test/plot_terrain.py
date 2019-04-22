@@ -96,10 +96,6 @@ def test(tparams, res):
 
     e = myRun.get_result()
 
-    os.system('python plot_terrain.py x1.2562.static.nc')
-    os.system('mkdir figures')
-    os.system('mv terrain.pdf figures')
-
     res.set('success', e.get('completed') and e.get('success')) 
     res.set('err_code', e.get('err_code'))
     res.set('err_msg', 'Example test ran fine')

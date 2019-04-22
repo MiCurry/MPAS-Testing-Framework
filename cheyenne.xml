@@ -12,6 +12,7 @@
 		<module name="python/2.7.13"/>
 		<module name="numpy"/>
 		<module name="netcdf4-python"/>
+		<module name="matplotlib"/>
 	</modset>
 	<modset name="gnu" compiler="gfortran">
 		<module name="gnu">

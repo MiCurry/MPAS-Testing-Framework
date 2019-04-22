@@ -48,9 +48,23 @@ def test(tparams, res):
 	os.system('ln -s '+exe_dir+'/atmosphere_model .')
 
 	utils.linkAllFiles(template_dir+'/inputs', './')
-	init = utils.modelRun('./', 'init_atmosphere_model', 1, env, add_lsfoptions={'-W':'0:30', '-e':'run.err', '-o':'run.out'}, add_pbsoptions={'-l walltime=00:30:00':''})
+	init = utils.modelRun('./', 
+                          'init_atmosphere_model', 
+                          1, 
+                          env, 
+                          add_lsfoptions={'-W':'0:30', 
+                                          '-e':'run.err', 
+                                          '-o':'run.out'}, 
+                          add_pbsoptions={'-l walltime=00:30:00':''})
 	init.runModelBlocking()
-	mtn_wave = utils.modelRun('./', 'atmosphere_model', 1, env, add_lsfoptions={'-W':'0:30', '-e':'run.err', '-o':'run.out'}, add_pbsoptions={'-l walltime=00:30:00':''})
+	mtn_wave = utils.modelRun('./', 
+                              'atmosphere_model', 
+                              1, 
+                              env, 
+                              add_lsfoptions={'-W':'0:30', 
+                                              '-e':'run.err', 
+                                              '-o':'run.out'}, 
+                              add_pbsoptions={'-l walltime=00:30:00':''})
 	mtn_wave.runModelBlocking()
 
 	e_init = init.get_result()
