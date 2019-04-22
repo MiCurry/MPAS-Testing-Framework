@@ -1,0 +1,12 @@
+<streams>
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="/glade/work/mcurry/meshes/x1.2562.grid.nc"
+                  filename_interval="none"
+                  input_interval="initial_only" />
+<immutable_stream name="output"
+                  type="output"
+                  clobber_mode="overwrite"
+                  filename_template="x1.2562.static.nc"
+                  output_interval="initial_only" />
+</streams>

@@ -1,0 +1,21 @@
+&data_sources
+    config_geog_data_path = '/glade/work/wrfhelp/WPS_GEOG/'
+    config_topo_data = 'topo_30s'
+/
+&time_management
+    config_calendar_type = 'gregorian_noleap'
+    config_start_time = '0000-01-01_00:00:00'
+    config_stop_time = '0000-01-01_00:00:00'
+    config_run_duration = 'none'
+/
+&io
+    config_pio_num_iotasks = 0
+    config_pio_stride = 1
+/
+&decomposition
+    config_num_halos = 2
+    config_block_decomp_file_prefix = '/glade/work/mcurry/meshes/x1.2562.graph.info.part.'
+    config_number_of_blocks = 0
+    config_explicit_proc_decomp = .false.
+    config_proc_decomp_file_prefix = '/glade/work/mcurry/meshes/x1.2562.graph.info.part.'
+/

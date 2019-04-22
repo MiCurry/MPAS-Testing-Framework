@@ -268,8 +268,18 @@ class modelRun:
 		self.result_manager = ResultManager()
 		self.result_manager.start()
 		self.result = self.result_manager.Result() 
-		self.t = modelProcess(pre=setupModelRun, post=returnFromModelRun, main=__runModelNonblocking__, nprocs = self.n_tasks, 
-									args={'dir':self.run_dir, 'exename':self.exename, 'n':self.n_tasks, 'env':self.env, 'dest':self.run_dir, 'add_lsfoptions':self.add_lsfoptions, 'add_pbsoptions':self.add_pbsoptions}, result = self.result)
+		self.t = modelProcess(pre=setupModelRun, 
+                              post=returnFromModelRun, 
+                              main=__runModelNonblocking__, 
+                              nprocs = self.n_tasks, 
+                              args = {'dir':self.run_dir, 
+                                     'exename':self.exename, 
+                                     'n':self.n_tasks, 
+                                     'env':self.env, 
+                                     'dest':self.run_dir, 
+                                     'add_lsfoptions':self.add_lsfoptions, 
+                                     'add_pbsoptions':self.add_pbsoptions}, 
+                              result = self.result)
 		self.started = True
 		self.t.start()
 		return True 
@@ -277,7 +287,12 @@ class modelRun:
 	def runModelBlocking(self):
 		self.started = True
 		popdir = setupModelRun(self.run_dir)
-		r = runModel(self.run_dir, self.exename, self.n_tasks, self.env, add_lsfoptions=self.add_lsfoptions, add_pbsoptions=self.add_pbsoptions)
+		r = runModel(self.run_dir, 
+                     self.exename, 
+                     self.n_tasks, 
+                     self.env, 
+                     add_lsfoptions=self.add_lsfoptions, 
+                     add_pbsoptions=self.add_pbsoptions)
 		self.result = Result()
 		self.result.set('completed', r[0])
 		self.result.set('err_code', r[1])
