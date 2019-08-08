@@ -3,143 +3,120 @@ This is a regression testing suite being implemented in python for MPAS, the
 Model for Prediction Across Scales, which is a part of the MMM division at
 NCAR.
 
+# Definition of Operant
 
+In this context, the term operant referees to any program that can be
+ran/run/called and its result of its completion checked.
 
+Tests are the most obvious form of an operant. I.e.: 'This this functionality
+of this piece of code, and see if the result is correct'. But an operant can be
+also be application based as in: 'Each morning, download these set of GFS data
+and ensure that they were downloaded'.
 
-# Creating and running your own tests
+## Requirements
 
-SMARTS/
-	test_runner.py
-	test/
-		__init__.py
-		test.py
+* Portable - Each system's characteristics are described (e.g. how parallel
+jobs are launched, how many CPU's the system has, memory etc.)
+
+* Ability to restart testing (pick up where last failures occurred)
+
+* Testing system will only run as many tests in parallel as can be supported
+by system resources
+
+* The testing system can function with or without schedulers
+
+* The testing system will come with an API reference and sufficient tutorial
+documentation
+
+* Operants can be organized in a hierarchy - Testing can begin at any point in the
+hierarchy, (to avoid rerunning expensive or tests that aren't needed)
+
+* Operants can return status code, status message and a set of assets (e.g.
+plots, log files, etc)
+
+* Operants should report their result into a simple report defined by the user.
+This report can be a simple log file, to a TeX file with graphics to an email
+of the status of a operant.
+    - The report ability should be flexible to handle a number of different
+      ways to do reporting, but should first be built with a simple log (either
+      stdout or a logfile) and a TeX file.
+    - The report can include assets from the test
+* Each test can specify what resource it requires
+    - Resources include:
+
+* Environment files should describe details about a specific machine and
+should be in a format thats easy to read by humans and machines (i.e. xml,
+json, or yaml)
+    - The enviornment files will describe:
+        * Environment Name
+        * Type of HPC Scheduler 
+        * Location of Required Libaries OR
+        * LMOD Command
+
+* The standard library should be a directory (that's described by a xml,
+json, or yaml file) that contains assets that will be resued by tests.
+    * It can also be used to store correct tests result to compare tests
+    against.
+
+## CRC
+```
+Name: Environment
+Responsibilities:
+    * Retrieve and store information about the current environment
+    * Schedule tests depending on the number of CPU's of the CPU and the
+      requested number by each test
+    * Launch tests on the machine by using the correct machine-dependent
+      launcher - i.e. an HPC scheduling system, or a normal mpi launch.
+    * Load/link the required libraries for running the specified test
+Collaborators:
+```
 
 ```
-python test_driver.py -n 36 -env cheyenne.xml -src
-/path/to/your/code/MPAS-Model release
+Name: Test - Test Runner - Test Handler
+Responsibilities:
+    * Keep track of the current status of a single test, whether scheduled,
+      running, stopped, finished or failed.
+    * Stop, start, abort, or remove tests that are scheduled to run, or that
+      are currently running.
+    * Issue commands for creating any output that will be used to report the
+      result of a test
+    * Communicate the status of tests to and from the user in some method -
+      (Output, but also maybe a shell to issue commands? or a deamon?)
+    * Handle errors that are not caught by the Test Description (i.e. runtime
+      errors or terminating signals).
+    * Report any non-kill signals
+Collaborators:
 ```
 
-1. In test/test.py, insure your system is listed in the
-`compatible_environments` list.
+```
+Name: **Operant**
+Responsibilities:
+    * Describe the needed requirements to run a test
+        - Number of CPUS
+        - Type of execution (MPI/normal)
+        - Needed library dependencies
+    * Contain logic to setup, run a single or multiple tests
+    * Contain logic to determine if a test has passed or has failed (if needed)
+    * User defined - users should be able to write scripts, functions, programs
+    to meet their desires.
+Collaborators:
+    * Environment
+    * Test Runner
+    * Reporter
+```
 
-
-# Love
-
-* The structure and layout of the project
-* Launching as many tests as possible occurding to how many CPU's we have
-allocated and how many each tests is allocated to use!
-* Dependencies on other tests
-* The LaTeX report!
-
-
-# Hate
-
-* The long, complicated `test_driver.py`
-* The comments/lack of documentation
-* The getters and setters .. BAD PYTHON DEVELOPER!
-* Lack of output during tests
-* Lack of output when something fails, why did it fail? And what was it looking
-  for?
-* Not a clear template - Do user tests
-
-
-
-
+```
+Name: Reporter
+Responsibilities:
+    * Generate simple reports as defined by the user in an Operant in the form
+    of standard output, logs, or TeK documents.
+    * Act as a wrapper for the user. Easily writes reports with a few system
+    calls and easily include common assets such as plots, logs, files etc.
+Collaborators:
+    * Environment - To report on what environment was used
+    * Operant
+```
 
 # Resources/Links
 * [PEP 8 - Python Style Guide](https://www.python.org/dev/peps/pep-0008/)
 * [PEP 257 - Docstring Conventions](https://www.python.org/dev/peps/pep-0257/)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Organization The testing suite is organized thusly: there is a main driver
-script called test_driver.py which sets up the testing environment and launches
-all tests. Each test is provided in the form of a python module inside a
-directory which contains the .py module implementation file (of the same name
-as the directory) and any files that are specific to that test that the test
-may require (namelists or stream definitions or things of that nature). See the
-restartability test (restartability directory) or the examples in the example
-directory. To run the 'example' test, see the <b>Run</b> section. If you'd like
-to run the 'toytest' example, simply compile the toy.f90 file using an mpi
-compiler, move it to some other directory (equivalent to MPAS directory) which
-also contains your XML config file (described later), and run the test from
-there. Also, the toytest directory must be copied/moved (not linked) one level
-up.
-
-You must specify which groups of tests or individual tests you want to run on
-the command line (groups are specified in the Tests.xml file, which can be
-found in this directory). An additional XML file is required to configure each
-run environment (it may also specify the test code directory). This XML file
-(see yellowstone.xml) tells the driver where to find the standard library as
-well as some other useful information about the environment in which we are
-running the tests. This file may be placed in the run directory (usually the
-top-level MPAS directory) and called 'Environment.xml' (you can link
-Environment.xml -> /foo/[...]/bar.xml), or it may be explicitly given with the
-'-env' option.
-
-The directory of the MPAS source code to be tested (referred to as the source
-directory or src_dir) may be provided using the optional '-src' argument. If it
-is not provided, it defaults to the run directory (the directory from which you
-launched the test_driver script, where the Environment.xml file might also be
-located).
-
-Both the driver and the individual tests may make use of the utils module,
-whose implementation can be found in the utils subdirectory. Note: each test
-module will not import the utils module directly, but rather it is passed along
-by the driver as a member of the env object when the test is invoked.
-
-### Standard Library The Standard Library is simply an archive of many files
-that are most likely going to be required by many tests; rather than have
-multiple tests provide the same file (which would be cumbersome and costly),
-these files are stored in the Standard Library. Each environment for testing
-MPAS has its own SL, and the SL may not be the same across computing
-environments (for instance, the SL on Yellowstone may contain very large meshes
-like the 3km mesh, while the SL on mmmtmp or one's local hard drive may not
-contain such large, obscure files). The test writer requests any files that he
-or she desires from the SL by specifying them in the test setup function, then
-the driver will locate the files (if they can be found) in the SL and link them
-to the desired location. 
-
-The SL is set up as a file hierarchy so that it can easily be perused by a
-human. In order to search through it, the utility makes use of the Library.xml
-file included in the top level of the SL, which describes the file hierarchy in
-xml form (it must exactly mirror the SL directory structure). If a tester
-wishes to add a useful file to the SL on a given system, he or she must simply
-add the file into the appropriate subdirectory and add the corresponding xml
-tag in the Library.xml file. 
-
-### Run
-
-1. Clone this repository, into the top-level MPAS directory if desired (should
-already be compiled) 2. Make sure an environment xml file (named
-'Environment.xml') and the Tests.xml file are in the top-level MPAS directory.
-You may have to link and/or rename those files from this repository.  3. From
-the top-level MPAS directory, run the command <br> python SMARTS/test_driver.py
-\<group_name\> ... \<test_name\>... -n \<max_num_tasks\> -env [...]/foo.xml
--src [...]/MPAS-Release <br> to run all of the desired tests (try 'python
-SMARTS/test_driver.py example -n 4')
-
-When the tests have completed, a results folder will be made with a pdf report
-of the results of all tests. 
-
-
-
