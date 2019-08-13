@@ -1,0 +1,47 @@
+---
+############
+# Cheyenne #
+############
+
+Description:
+  Name: Cheyenne 
+  Max-Cores: -
+  HPC: PBS # Or the other one, or False/false
+  Modules: True
+  Default-Compiler: intel
+LMOD: 
+  PATH: /glade/u/apps/ch/opt/lmod/7.2.1/lmod/lmod/libexec/lmod
+PBS:  
+  Options:
+    -A: NMMM0013 # Account
+    -q: Regular  # Queue
+
+Modset: GNU 
+  Module: gnu
+    Version: 9.1.0
+  Module: pnetcdf
+  Module: ncarenv
+  Module: ncarcompilers
+  Module: mpt
+  Module: ncl
+
+Modset: Intel
+  Module: Intel
+    Version: 19.0.2
+  Module: ncarenv
+  Module: ncarcompilers
+  Module: mpt
+  Envvar: NETCDF
+    Value: /glade/work/duda/libs-intel19.0.2
+  Envvar: PNETCDF
+    Value: /glade/work/duda/libs-intel19.0.2
+  Envvar: PIO
+    Value: /glade/work/duda/libs-intel19.0.2
+  Envvar: MPAS_EXTERNAL_LIBS
+    Value: "-L${NETCDF}/lib -lhdf5_hl -lhdf5 -ldl -lz"
+  Envvar: MPAS_EXTERNAL_INCLUDES
+    Value: "-I${NETCDF}/include"
+  Envvar: JASPERLIB
+    Value: /glade/u/home/wrfhelp/UNGRIB_LIBRARIES/lib
+  Envvar: JASPERINC
+    Value: /glade/u/home/wrfhelp/UNGRIB_LIBRARIES/include

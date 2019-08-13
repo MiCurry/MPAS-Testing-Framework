@@ -1,0 +1,23 @@
+Compile:
+    - compile_gnu
+    - compile_intel
+    - compile_pgi
+Init Atmosphere GNU:
+    - compile_gnu
+    - init_atmosphere
+Init Atmosphere Intel:
+    - compile_intel
+    - init_atmosphere
+Atmosphere GNU:
+    - compile_gnu
+    - atmosphere
+Atmosphere INTEL:
+    - compile_gnu
+    - atmosphere
+Static Interp cpus:
+    - compile_gnu
+    - init_atmosphere 1
+    - init_atmosphere 2
+    - init_atmosphere 4
+    - init_atmosphere 8
+    - init_atmosphere 16

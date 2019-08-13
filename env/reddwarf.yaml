@@ -1,0 +1,27 @@
+---
+
+############
+# Reddwarf #
+############
+
+Description:
+  Name: Reddwarf
+  Max-Cores: 12
+  Modules: False
+  Default-Compiler: gnu
+Compilers:
+  gnu:
+    version: 9.1.0
+    PATH: /sysdisk2/mcurry/build-gcc-9.1.0/gcc-9.1.0
+    libs:
+        P-NETCDF: 
+          version:
+          PATH: /user/mcurry/build-gnu-9.1./lib
+        C-NETCDF:
+          version:
+          PATH: /user/mcurry/build-gnu-9.1./lib
+        F-NETCDF:
+          version:
+          PATH: /user/mcurry/build-gnu-9.1./lib
+        PIO:
+          PATH: /user/mcurry/build-gnu-9.1./lib

@@ -9,7 +9,12 @@ pathSL="/shared/wmr/mcurry/Standard-Library/">
 		<module name="ncarcompilers"/>
 		<module name="netcdf"/>
 		<module name="mpich"/>
+<<<<<<< Updated upstream
 		<module name="pnetcdf"/>
+=======
+		<module name="pnetcdf">
+		</module>
+>>>>>>> Stashed changes
 		<module name="pio"/>
 		<module name="ncl"/>
 	</modset>
@@ -18,19 +23,32 @@ pathSL="/shared/wmr/mcurry/Standard-Library/">
 		<module name="ncarcompilers"/>
 		<module name="netcdf"/>
 		<module name="mpich"/>
+<<<<<<< Updated upstream
 		<module name="pnetcdf"/>
+=======
+		<module name="pnetcdf">
+		</module>
+>>>>>>> Stashed changes
 		<module name="pio"/>
 		<module name="ncl"/>
 	</modset>
 	<modset name="intel" compiler="ifort">
 		<module name="intel">
+<<<<<<< Updated upstream
 			<version v="18.0.1"/>
+=======
+			<version v="16.0.1"/>
+>>>>>>> Stashed changes
 		</module>
 		<module name="ncarcompilers"/>
 		<module name="netcdf"/>
 		<module name="mpich"/>
 		<module name="pnetcdf">
+<<<<<<< Updated upstream
 			<version v="1.8.1"/>
+=======
+			<version v="1.5.0"/>
+>>>>>>> Stashed changes
 		</module>
 		<module name="pio"/>
 		<module name="ncl"/>

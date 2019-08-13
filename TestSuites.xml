@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<all>
+	<test_group name="sc_test">
+		<test name="compile_gnu"/>
+		<test name="ideal_supercell"/>
+	</test_group>
+	<test_group name="compile">
+		<test name="comptest"/>
+	</test_group>
+	<test_group name="examples">
+		<test name="toytest"/>
+		<test name="example"/>
+	</test_group>
+	<test_group name="basic">
+		<test name="restartability"/>
+	</test_group>
+	<test_group name="release">
+		<test name="compile_gnu"/>
+		<test name="compile_gnu_mtn_wave"/>
+		<test name="compile_intel"/>
+		<test name="compile_pgi"/>
+		<test name="static_usgs"/>
+		<test name="static_modis"/>
+		<test name="ideal_mtn_wave"/>
+		<test name="ideal_supercell"/>
+	</test_group>
+</all>

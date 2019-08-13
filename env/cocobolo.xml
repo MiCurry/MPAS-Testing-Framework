@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<environment name="snorri" max_cores="2"  modules="True"
+LMOD_CMD="/usr/local/lmod/lmod/libexec/lmod"
+pathSL="/shared/wmr/mcurry/Standard-Library/">
+	<modset name="base">
+		<module name="ncarenv"/>
+		<module name="ncarbinlibs"/>
+		<module name="gnu"/>
+		<module name="ncarcompilers"/>
+		<module name="netcdf"/>
+		<module name="mpich"/>
+		<module name="pnetcdf">
+		</module>
+		<module name="pio"/>
+		<module name="ncl"/>
+	</modset>
+	<modset name="gnu" default="True" compiler="gfortran">
+		<module name="gnu"/>
+		<module name="ncarcompilers"/>
+		<module name="netcdf"/>
+		<module name="mpich"/>
+		<module name="pnetcdf">
+		</module>
+		<module name="pio"/>
+		<module name="ncl"/>
+	</modset>
+	<modset name="intel" compiler="ifort">
+		<module name="intel">
+			<version v="18.0.1"/>
+		</module>
+		<module name="ncarcompilers"/>
+		<module name="netcdf"/>
+		<module name="mpich"/>
+		<module name="pnetcdf">
+			<version v="1.8.1"/>
+		</module>
+		<module name="pio"/>
+		<module name="ncl"/>
+	</modset>
+</environment>

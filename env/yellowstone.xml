@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<environment name="yellowstone" type="LSF" max_cores="8" modules="True" LMOD_CMD="/glade/apps/opt/lmod/lmod/libexec/lmod" pathSL="/glade/scratch/hendersn/Standard-Library/"> 
+	<lsf_option name="-P" value="P64000101"/>
+	<lsf_option name="-q" value="regular"/>
+	<modset name="base">
+		<module name="ncarenv"/>
+		<module name="ncarbinlibs"/>
+		<module name="python"/>
+		<module name="all-python-libs"/>
+		<module name="ncl"/>
+	</modset>
+	<modset name="gnu">
+		<module name="gnu"/>
+		<module name="netcdf-mpi"/>
+		<module name="pnetcdf"/>
+		<module name="ncl"/>
+	</modset>
+	<modset name="intel" default="True" compiler="ifort">
+		<module name="intel">
+			<version v="15.0.1"/>
+			<version v="12.1.5"/>
+			<version v="16.0.3"/>
+		</module>
+		<module name="ncarcompilers"/>
+		<module name="netcdf-mpi"/>
+		<module name="pnetcdf">
+			<version v="1.4.1"/>
+			<version v="1.6.0"/>
+		</module>
+		<env_var name="PIO" value="/glade/p/work/duda/pio1_9_19/pio"/>
+		<module name="ncl"/>
+	</modset>
+</environment>

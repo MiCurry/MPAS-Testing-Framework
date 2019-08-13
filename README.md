@@ -3,15 +3,6 @@ This is a regression testing suite being implemented in python for MPAS, the
 Model for Prediction Across Scales, which is a part of the MMM division at
 NCAR.
 
-# Definition of Operant
-
-In this context, the term operant referees to any program that can be
-ran/run/called and its result of its completion checked.
-
-Tests are the most obvious form of an operant. I.e.: 'This this functionality
-of this piece of code, and see if the result is correct'. But an operant can be
-also be application based as in: 'Each morning, download these set of GFS data
-and ensure that they were downloaded'.
 
 ## Requirements
 
